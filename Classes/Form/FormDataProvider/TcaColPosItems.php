@@ -21,6 +21,7 @@ use IchHabRecht\ContentDefender\BackendLayout\BackendLayoutConfiguration;
 use IchHabRecht\ContentDefender\Form\Exception\AccessDeniedColPosException;
 use IchHabRecht\ContentDefender\Repository\ContentRepository;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TcaColPosItems implements FormDataProviderInterface
@@ -59,7 +60,11 @@ class TcaColPosItems implements FormDataProviderInterface
         $record['pid'] = $pageId;
 
         foreach ($result['processedTca']['columns']['colPos']['config']['items'] as $key => $item) {
-            $colPos = (int)$item[1];
+            if (isset($item[1]) && !empty($item[1])) {
+                $colPos = (int)$item[1];
+            } else {
+                $colPos = (int)$item['value'];
+            }
             $columnConfiguration = $backendLayoutConfiguration->getConfigurationByColPos($colPos, $record['uid']);
             if (empty($columnConfiguration)) {
                 continue;
