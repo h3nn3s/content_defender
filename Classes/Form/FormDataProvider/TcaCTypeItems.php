@@ -54,7 +54,12 @@ class TcaCTypeItems implements FormDataProviderInterface
             $result['processedTca']['columns'][$field]['config']['items'] = array_filter(
                 $result['processedTca']['columns'][$field]['config']['items'],
                 function ($item) use ($allowedValues) {
-                    return in_array($item[1], $allowedValues);
+                    if (isset($item[1]) && !empty($item[1])) {
+                        $CType = $item[1];
+                    } else {
+                        $CType = $item['value'];
+                    }
+                    return in_array($CType, $allowedValues);
                 }
             );
         }
